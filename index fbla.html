@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #333; }
+        .calculator { background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); width: 600px; text-align: center; margin: auto; }
+        .logo { margin-bottom: 20px; margin-top: 20px; } /* Added margin-top */
+        .logo img { max-height: 50px; margin: 0 10px; }
+        .input-box { margin-bottom: 10px; }
+        .title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .subtitle { font-size: 24px; margin-bottom: 10px; }
+        .names { font-size: 18px; text-align: center; }
+        .calculator-text-box { border: 4px solid #000; padding: 0.5px; display:block; }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="calculator-text-box">
+            <h1>GPA Calculator</h1>
+        </div>
+        <div class="logo">
+            <img src="marquette_logo.png" alt="Marquette High School Logo">
+            <img src="rockwood_logo.png" alt="Rockwood School District Logo">
+        </div>
+        <div class="subtitle">Intro to Programming - FBLA</div>
+        <div class="title">Chinta, Akurati, Soupramanien</div>
+        <div id="step1">
+            <label for="numClasses">How many classes do you take?</label>
+            <input type="number" id="numClasses">
+            <button onclick="createGradeInputs()">Next</button>
+        </div>
+        <div id="gradeInputs"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function createGradeInputs() {
+            const numClasses = parseInt(document.getElementById("numClasses").value);
+            const gradeInputs = document.getElementById("gradeInputs");
+            gradeInputs.innerHTML = "";
+            for (let i = 1; i <= numClasses; i++) {
+                gradeInputs.innerHTML += `<div class="input-box"><label for="grade${i}">Class ${i} Grade:</label><input type="text" id="grade${i}"></div>`;
+            }
+            gradeInputs.innerHTML += `<button onclick="calculateGPA()">Calculate GPA</button>`;
+            document.getElementById("step1").style.display = "none";
+        }
+        function calculateGPA() {
+            const numClasses = parseInt(document.getElementById("numClasses").value);
+            let totalPoints = 0, totalCredits = 0;
+            for (let i = 1; i <= numClasses; i++) {
+                const grade = document.getElementById(`grade${i}`).value.toUpperCase();
+                let points = {"A":4.0,"A-":4.0,"B+":3.0,"B":3.0,"B-":3.0,"C+":2.0,"C":2.0,"C-":2.0,"D+":1.0,"D":1.0,"D-":1.0,"F":0.0}[grade];
+                if (points === undefined) { alert(`Invalid grade entered for Class ${i}`); return; }
+                totalPoints += points; totalCredits += 1;
+            }
+            const unweightedGPA = (totalPoints / totalCredits).toFixed(2);
+            const weightedGPA = (totalPoints / totalCredits + 1).toFixed(2);
+            const cumulativeGPA = ((parseFloat(unweightedGPA) + parseFloat(weightedGPA)) / 2).toFixed(2);
+            document.getElementById("results").innerHTML = `<p><strong>Unweighted GPA:</strong> ${unweightedGPA}</p><p><strong>Weighted GPA:</strong> ${weightedGPA}</p><p><strong>Cumulative GPA:</strong> ${cumulativeGPA}</p>`;
+        }
+    </script>
+</body>
+</html>
